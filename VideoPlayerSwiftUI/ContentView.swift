@@ -9,14 +9,9 @@ import SwiftUI
 
 struct ContentView: View {
 
-	private var debug: Bool = ((Bundle.main.infoDictionary?["isDebugMode"] as? String) ?? "FALSE") == "TRUE" ? true : false
-
     var body: some View {
         Text("Hello, world!")
             .padding()
-			.onAppear {
-				print("isDebug: \(debug)")
-			}
     }
 }
 

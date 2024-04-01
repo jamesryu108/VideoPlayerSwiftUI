@@ -10,17 +10,17 @@ import Foundation
 /// `Video` represents a video content entity with associated metadata.
 /// It conforms to `Codable` for easy encoding and decoding from and to JSON,
 struct Video: Codable, Identifiable {
-	let id: String
-	let title: String
-	let hlsURL: URL
-	let fullURL: URL
-	let description: String
-	let publishedAt: Date
-	let author: Author
+    let id: String
+    let title: String
+    let hlsURL: String
+    let fullURL: String
+    let description: String
+    let publishedAt: Date
+    let author: Author
 }
 
 /// `Author` represents the creator of the video content.
 struct Author: Codable, Identifiable {
-	let id: String
-	let name: String
+    let id: String
+    let name: String
 }
