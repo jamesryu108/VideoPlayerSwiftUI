@@ -7,63 +7,66 @@
 
 import Foundation
 
+/// Represents errors that can occur within the video service.
 enum VideoServiceError: Error {
     case invalidURL
     case networkError(Error)
     case decodingError(Error)
 }
 
-protocol ServiceConfiguration {
-	var videosURL: URL? { get }
-	var isStaging: Bool { get }
+protocol DataProvider {
+	func fetchData<T: Decodable>() async throws -> T
 }
 
-struct StagingConfiguration: ServiceConfiguration {
-	var videosURL = URL(string: "http://localhost:4000/videos")
-	var isStaging = true
+/// A data provider for the staging environment, returning predefined sample data.
+struct StagingDataProvider: DataProvider {
+	/// Fetches predefined sample data.
+	/// - Throws: An error if the sample data could not be cast to the expected type.
+	func fetchData<T>() async throws -> T where T : Decodable {
+		guard let sampleData = SampleJSON.sampleData as? T else {
+			throw VideoServiceError.decodingError(NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey: "Failed to cast sample data to the expected type"]))
+		}
+		return sampleData
+	}
 }
 
-struct ProductionConfiguration: ServiceConfiguration {
-	var videosURL = URL(string: "http://localhost:4000/videos")
-	var isStaging = false
-}
+/// A data provider for the production environment, fetching data from a network URL.
+struct ProductionDataProvider: DataProvider {
+	let session = URLSession.shared
+	let videosURL: URL
 
-final class VideoService<T: Decodable> {
-
-    private let session = URLSession.shared
-	private let configuration: ServiceConfiguration
-
-	init(configuration: ServiceConfiguration) {
-		self.configuration = configuration
+	init(videosURL: URL) {
+		self.videosURL = videosURL
 	}
 
-    func fetchData() async throws -> T {
-
-		guard let videosURL = configuration.videosURL else {
-			throw VideoServiceError.invalidURL
+	/// Fetches data from the network and decodes it into the specified type.
+	/// - Throws: An error if the data could not be fetched or decoded.
+	func fetchData<T>() async throws -> T where T: Decodable {
+		do {
+			let (data, _) = try await session.data(from: videosURL)
+			let decoder = JSONDecoder()
+			decoder.dateDecodingStrategy = .iso8601
+			return try decoder.decode(T.self, from: data)
+		} catch {
+			throw VideoServiceError.networkError(error)
 		}
+	}
+}
 
-        let decoder = JSONDecoder()
-        decoder.dateDecodingStrategy = .iso8601
+/// Provides functionality to fetch and decode data for videos.
+final class VideoService<T: Decodable> {
+	/// The data provider to use for fetching data.
+	private let dataProvider: DataProvider
 
-		if configuration.isStaging {
-			guard let sampleData = SampleJSON.sampleData as? T else {
-				throw VideoServiceError.decodingError(
-					NSError(
-						domain: "",
-						code: 0,
-						userInfo: [NSLocalizedDescriptionKey: "Failed to cast sample data to the expected type"]
-					)
-				)
-			}
-			return sampleData
-        } else {
-			do {
-				let (data, _) = try await session.data(from: videosURL)
-				return try decoder.decode(T.self, from: data)
-			} catch {
-				throw VideoServiceError.networkError(error)
-			}
-        }
-    }
+	/// Initializes a new video service with the specified data provider.
+	init(dataProvider: DataProvider) {
+		self.dataProvider = dataProvider
+	}
+
+	/// Fetches and decodes video data.
+	/// - Returns: The decoded data of the specified type.
+	/// - Throws: An error if the data could not be fetched or decoded.
+	func fetchData() async throws -> T {
+		return try await dataProvider.fetchData()
+	}
 }
