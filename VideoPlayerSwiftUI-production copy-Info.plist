@@ -52,6 +52,6 @@
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
 	<key>isStaging</key>
-	<string>NO</string>
+	<true/>
 </dict>
 </plist>
