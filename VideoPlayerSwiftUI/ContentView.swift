@@ -12,15 +12,6 @@ struct ContentView: View {
     var body: some View {
         Text("Hello, world!")
             .padding()
-			.onAppear {
-
-				let dataProvider = StagingDataProvider()
-				let videoService = VideoService<[Video]>(dataProvider: dataProvider)
-				Task {
-					let data = try await videoService.fetchData()
-					print("data: \(data)")
-				}
-			}
     }
 }
 
