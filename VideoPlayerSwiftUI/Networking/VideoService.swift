@@ -13,30 +13,54 @@ enum VideoServiceError: Error {
     case decodingError(Error)
 }
 
-final class VideoService {
+protocol ServiceConfiguration {
+	var videosURL: URL? { get }
+	var isStaging: Bool { get }
+}
 
-    private enum Constants {
-        static let videosURLString = "http://localhost:4000/videos"
-        static let isDebug: Bool = ((Bundle.main.infoDictionary?["isStaging"] as? Bool) ?? false) == true
-    }
+struct StagingConfiguration: ServiceConfiguration {
+	var videosURL = URL(string: "http://localhost:4000/videos")
+	var isStaging = true
+}
+
+struct ProductionConfiguration: ServiceConfiguration {
+	var videosURL = URL(string: "http://localhost:4000/videos")
+	var isStaging = false
+}
+
+final class VideoService<T: Decodable> {
 
     private let session = URLSession.shared
+	private let configuration: ServiceConfiguration
 
-    func fetchVideos() async throws -> [Video] {
+	init(configuration: ServiceConfiguration) {
+		self.configuration = configuration
+	}
 
-		guard let videosURL = URL(string: Constants.videosURLString) else {
+    func fetchData() async throws -> T {
+
+		guard let videosURL = configuration.videosURL else {
 			throw VideoServiceError.invalidURL
 		}
 
         let decoder = JSONDecoder()
         decoder.dateDecodingStrategy = .iso8601
-        if Constants.isDebug {
-			return SampleJSON.sampleData
+
+		if configuration.isStaging {
+			guard let sampleData = SampleJSON.sampleData as? T else {
+				throw VideoServiceError.decodingError(
+					NSError(
+						domain: "",
+						code: 0,
+						userInfo: [NSLocalizedDescriptionKey: "Failed to cast sample data to the expected type"]
+					)
+				)
+			}
+			return sampleData
         } else {
-			//Fetch data from the API
 			do {
 				let (data, _) = try await session.data(from: videosURL)
-				return try decoder.decode([Video].self, from: data)
+				return try decoder.decode(T.self, from: data)
 			} catch {
 				throw VideoServiceError.networkError(error)
 			}
