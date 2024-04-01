@@ -16,6 +16,7 @@
 		767D452A4CBCD4A5F529FE5B /* Pods_VideoPlayerSwiftUI_VideoPlayerSwiftUIUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3F0A4406494C6BC8AF4AC50B /* Pods_VideoPlayerSwiftUI_VideoPlayerSwiftUIUITests.framework */; };
 		785A57470110DE3B332BF242 /* Pods_VideoPlayerSwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ED1B5E55B36EAE7FDDB78A2A /* Pods_VideoPlayerSwiftUI.framework */; };
 		9E3145612BBA5CD6008FA113 /* Video.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E3145602BBA5CD6008FA113 /* Video.swift */; };
+		9E3145662BBA5F42008FA113 /* SampleJSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E3145652BBA5F42008FA113 /* SampleJSON.swift */; };
 		A4D0518813BFDCF21E4386CD /* Pods_VideoPlayerSwiftUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 88D33E5B408A29891E5B7CD2 /* Pods_VideoPlayerSwiftUITests.framework */; };
 /* End PBXBuildFile section */
 
@@ -54,6 +55,7 @@
 		5A7477D87156E60F1CEA8BB9 /* Pods-VideoPlayerSwiftUI-VideoPlayerSwiftUIUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-VideoPlayerSwiftUI-VideoPlayerSwiftUIUITests.debug.xcconfig"; path = "Target Support Files/Pods-VideoPlayerSwiftUI-VideoPlayerSwiftUIUITests/Pods-VideoPlayerSwiftUI-VideoPlayerSwiftUIUITests.debug.xcconfig"; sourceTree = "<group>"; };
 		88D33E5B408A29891E5B7CD2 /* Pods_VideoPlayerSwiftUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_VideoPlayerSwiftUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		9E3145602BBA5CD6008FA113 /* Video.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Video.swift; sourceTree = "<group>"; };
+		9E3145652BBA5F42008FA113 /* SampleJSON.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleJSON.swift; sourceTree = "<group>"; };
 		BDCD1E5DA3A558526600FBF1 /* Pods-VideoPlayerSwiftUI.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-VideoPlayerSwiftUI.debug.xcconfig"; path = "Target Support Files/Pods-VideoPlayerSwiftUI/Pods-VideoPlayerSwiftUI.debug.xcconfig"; sourceTree = "<group>"; };
 		D0E2130198B1E78F16256AD9 /* Pods-VideoPlayerSwiftUI-VideoPlayerSwiftUIUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-VideoPlayerSwiftUI-VideoPlayerSwiftUIUITests.release.xcconfig"; path = "Target Support Files/Pods-VideoPlayerSwiftUI-VideoPlayerSwiftUIUITests/Pods-VideoPlayerSwiftUI-VideoPlayerSwiftUIUITests.release.xcconfig"; sourceTree = "<group>"; };
 		DE33628C4AF9AD91B31935EE /* Pods-VideoPlayerSwiftUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-VideoPlayerSwiftUITests.debug.xcconfig"; path = "Target Support Files/Pods-VideoPlayerSwiftUITests/Pods-VideoPlayerSwiftUITests.debug.xcconfig"; sourceTree = "<group>"; };
@@ -137,6 +139,7 @@
 		3AF67A5A25A64DBD00D360A7 /* VideoPlayerSwiftUI */ = {
 			isa = PBXGroup;
 			children = (
+				9E3145622BBA5EB7008FA113 /* Resources */,
 				9E31455F2BBA5CB8008FA113 /* Models */,
 				3AF67A5B25A64DBD00D360A7 /* VideoPlayerSwiftUIApp.swift */,
 				3AF67A5D25A64DBD00D360A7 /* ContentView.swift */,
@@ -179,6 +182,14 @@
 				9E3145602BBA5CD6008FA113 /* Video.swift */,
 			);
 			path = Models;
+			sourceTree = "<group>";
+		};
+		9E3145622BBA5EB7008FA113 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				9E3145652BBA5F42008FA113 /* SampleJSON.swift */,
+			);
+			path = Resources;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -421,6 +432,7 @@
 				3AF67A5E25A64DBD00D360A7 /* ContentView.swift in Sources */,
 				9E3145612BBA5CD6008FA113 /* Video.swift in Sources */,
 				3AF67A5C25A64DBD00D360A7 /* VideoPlayerSwiftUIApp.swift in Sources */,
+				9E3145662BBA5F42008FA113 /* SampleJSON.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
