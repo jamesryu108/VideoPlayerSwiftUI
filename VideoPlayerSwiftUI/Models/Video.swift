@@ -15,7 +15,7 @@ struct Video: Codable, Identifiable {
     let hlsURL: String
     let fullURL: String
     let description: String
-    let publishedAt: Date
+    let publishedAt: String
     let author: Author
 }
 
