@@ -8,11 +8,15 @@
 import SwiftUI
 
 struct ContentView: View {
-
-    var body: some View {
-        Text("Hello, world!")
-            .padding()
-    }
+	var body: some View {
+		GeometryReader { geometry in
+			VStack {
+				VideoPlayerControlsView()
+					.frame(height: geometry.size.height * 0.3) // 30% of the parent view's height
+				Spacer() // Use a Spacer to push the video player to the top
+			}
+		}
+	}
 }
 
 struct ContentView_Previews: PreviewProvider {
