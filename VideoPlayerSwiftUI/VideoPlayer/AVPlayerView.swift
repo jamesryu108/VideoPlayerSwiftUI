@@ -12,33 +12,46 @@ import UIKit
 /// UIViewRepresentable wrapper for AVPlayer
 struct AVPlayerView: UIViewRepresentable {
 	var player: AVPlayer
+	var key: UUID // Use this key to force updates
 
 	func makeUIView(context: Context) -> UIView {
-		return PlayerUIView(player: player)
+		PlayerUIView(player: player)
 	}
 
-	func updateUIView(_ uiView: UIView, context: Context) {}
+	func updateUIView(_ uiView: UIView, context: Context) {
+		if let playerUIView = uiView as? PlayerUIView {
+			playerUIView.updatePlayer(player: player)
+		}
+	}
 }
 
+// PlayerUIView changes
 class PlayerUIView: UIView {
-	private var playerLayer: AVPlayerLayer?
+	var playerLayer: AVPlayerLayer?
 
 	init(player: AVPlayer) {
 		super.init(frame: .zero)
-		// Initialize the player layer and add it to the view's layer
-		let playerLayer = AVPlayerLayer(player: player)
-		self.layer.addSublayer(playerLayer)
-		self.playerLayer = playerLayer
-		playerLayer.videoGravity = .resizeAspect
+		setupPlayerLayer(player: player)
 	}
 
 	required init?(coder: NSCoder) {
 		fatalError("init(coder:) has not been implemented")
 	}
 
+	func updatePlayer(player: AVPlayer) {
+		playerLayer?.player = player
+	}
+
+	private func setupPlayerLayer(player: AVPlayer) {
+		let playerLayer = AVPlayerLayer(player: player)
+		self.layer.addSublayer(playerLayer)
+		self.playerLayer = playerLayer
+		playerLayer.videoGravity = .resizeAspect
+		playerLayer.frame = self.bounds
+	}
+
 	override func layoutSubviews() {
 		super.layoutSubviews()
-		// Ensure the player layer bounds match the UIView bounds
 		playerLayer?.frame = self.bounds
 	}
 }

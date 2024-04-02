@@ -15,6 +15,7 @@ struct VideoPlayerControlsView: View {
 	@State private var currentIndex = 0 // Track the current video index
 	@State private var isPlaying = false
 	@State private var showControls = false
+	@State private var playerKey: UUID = UUID() // Add this line
 
 	init(videoData: [Video]) {
 		let sortedVideos = videoData.sorted { $0.publishedAt < $1.publishedAt }
@@ -28,7 +29,7 @@ struct VideoPlayerControlsView: View {
 	var body: some View {
 		ZStack {
 			if let player {
-				AVPlayerView(player: player)
+				AVPlayerView(player: player, key: playerKey)
 					.onAppear {
 						player.pause() // Ensure the video is paused at the start
 					}
@@ -121,8 +122,9 @@ struct VideoPlayerControlsView: View {
 
 	private func updatePlayerForCurrentIndex() {
 		guard let url = URL(string: videoData[currentIndex].hlsURL) else { return }
-		player = AVPlayer(url: url)
-		player?.pause() // Ready to play, but paused for user action
-		isPlaying = false // Reset playing state
+		self.player = AVPlayer(url: url)
+		self.player?.pause()
+		self.isPlaying = false
+		self.playerKey = UUID() // Update the key to force a refresh
 	}
 }
