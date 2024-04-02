@@ -13,7 +13,6 @@ struct ContentView: View {
 			VStack {
 				VideoPlayerControlsView()
 					.frame(height: geometry.size.height * 0.3) // 30% of the parent view's height
-					.background(Color.blue)
 				Spacer() // Use a Spacer to push the video player to the top
 			}
 		}
