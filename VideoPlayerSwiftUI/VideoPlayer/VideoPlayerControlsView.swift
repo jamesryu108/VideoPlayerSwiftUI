@@ -10,24 +10,40 @@ import SwiftUI
 
 struct VideoPlayerControlsView: View {
 
-	@State private var player = AVPlayer(url: URL(string: "https://example.com/video.mp4")!)
+	var videoData: [Video]
+	@State private var player: AVPlayer?
+	@State private var currentIndex = 0 // Track the current video index
 	@State private var isPlaying = false
 	@State private var showControls = false
 
+	init(videoData: [Video]) {
+		let sortedVideos = videoData.sorted { $0.publishedAt < $1.publishedAt }
+		self.videoData = sortedVideos
+
+		// Load the first video URL into the player if available
+		if let firstVideoUrl = sortedVideos.first?.hlsURL, let url = URL(string: firstVideoUrl) {
+			_player = State(initialValue: AVPlayer(url: url))
+		}
+	}
 	var body: some View {
 		ZStack {
-			AVPlayerView(player: player)
-				.onAppear {
-					player.pause() // Ensure the video is paused at the start
-				}
-				.onDisappear {
-					player.pause() // Pause the video when the view disappears
-				}
-				.onTapGesture {
-					withAnimation {
-						showControls.toggle() // Toggle the visibility of the controls
+			if let player {
+				AVPlayerView(player: player)
+					.onAppear {
+						player.pause() // Ensure the video is paused at the start
 					}
-				}
+					.onDisappear {
+						player.pause() // Pause the video when the view disappears
+					}
+					.onTapGesture {
+						withAnimation {
+							showControls.toggle() // Toggle the visibility of the controls
+						}
+					}
+			} else {
+				Text("Unable to load video")
+					.foregroundColor(.white)
+			}
 
 			// Overlay View
 			if showControls {
@@ -88,14 +104,25 @@ struct VideoPlayerControlsView: View {
 
 	private func togglePlayPause() {
 		isPlaying.toggle()
-		isPlaying ? player.play() : player.pause()
+		isPlaying ? player?.play() : player?.pause()
 	}
 
 	private func previous() {
-		// Implementation for previous button
+		guard currentIndex > 0 else { return }
+		currentIndex -= 1
+		updatePlayerForCurrentIndex()
 	}
 
 	private func forward() {
-		// Implementation for forward button
+		guard currentIndex < videoData.count - 1 else { return }
+		currentIndex += 1
+		updatePlayerForCurrentIndex()
+	}
+
+	private func updatePlayerForCurrentIndex() {
+		guard let url = URL(string: videoData[currentIndex].hlsURL) else { return }
+		player = AVPlayer(url: url)
+		player?.pause() // Ready to play, but paused for user action
+		isPlaying = false // Reset playing state
 	}
 }
