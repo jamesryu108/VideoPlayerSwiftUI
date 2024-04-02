@@ -10,10 +10,13 @@ import SwiftUI
 
 struct ContentView: View {
 
+	@ObservedObject private var viewModel: ContentViewViewModel
+
 	private let markdownString = "This is **bold**, this is *italic*, and this is `code`."
 	private let markdownParser = MarkdownParser()
 
-	init() {
+	init(viewModel: ContentViewViewModel) {
+		self.viewModel = viewModel
 		customizeNavigationBar()
 	}
 
@@ -21,8 +24,10 @@ struct ContentView: View {
 		NavigationView {
 			GeometryReader { geometry in
 				LazyVStack(spacing: 0) {
-					VideoPlayerControlsView()
-						.frame(height: geometry.size.height * 0.3) // 30% of the parent view's height
+					if let videoData = viewModel.videoData {
+						VideoPlayerControlsView(videoData: videoData)
+							.frame(height: geometry.size.height * 0.3)
+					}
 					ScrollView {
 						AttributedTextView(attributedString: markdownParser.parse(markdownString))
 							.frame(height: geometry.size.height * 0.7)
@@ -30,6 +35,11 @@ struct ContentView: View {
 					}
 				}
 				.navigationBarTitle("Video Player", displayMode: .inline)
+			}
+		}
+		.onAppear {
+			Task {
+				await viewModel.fetchData()
 			}
 		}
 	}
@@ -49,10 +59,4 @@ struct ContentView: View {
 		UINavigationBar.appearance().scrollEdgeAppearance = appearance // For large titles
 		UINavigationBar.appearance().tintColor = .white // Set the tint color for buttons
 	}
-}
-
-struct ContentView_Previews: PreviewProvider {
-    static var previews: some View {
-        ContentView()
-    }
 }
