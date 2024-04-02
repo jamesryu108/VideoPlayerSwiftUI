@@ -121,10 +121,24 @@ struct VideoPlayerControlsView: View {
 	}
 
 	private func updatePlayerForCurrentIndex() {
-		guard let url = URL(string: videoData[currentIndex].hlsURL) else { return }
-		self.player = AVPlayer(url: url)
+		// Ensure any current video playback is stopped.
 		self.player?.pause()
+
+		guard let url = URL(string: videoData[currentIndex].hlsURL) else { return }
+		let newPlayer = AVPlayer(url: url)
+
+		// Update the player with the new video.
+		self.player = newPlayer
+
+		// Since we're changing videos, reset the playback state.
 		self.isPlaying = false
-		self.playerKey = UUID() // Update the key to force a refresh
+
+		// Update the unique key to force the AVPlayerView to refresh.
+		self.playerKey = UUID()
+
+		// Optionally, you can also immediately start playing the new video here.
+		 newPlayer.play()
+		 self.isPlaying = true
 	}
+
 }
