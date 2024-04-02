@@ -75,9 +75,14 @@ struct VideoPlayerControlsView: View {
 		Image(name) // Replace with your own asset
 			.resizable()
 			.aspectRatio(contentMode: .fit)
-			.padding() // Makes the tap area larger
-			.background(Color.gray.opacity(0.5)) // The grey circle background
-			.clipShape(Circle()) // Clips the background to a circle
+			.padding(10) // Makes the tap area larger
+			.background(
+				Circle() // Create the circular background shape
+					.fill(Color.gray.opacity(0.5)) // The grey circle background
+					.overlay(
+						Circle().stroke(Color.gray.opacity(0.8), lineWidth: 2) // Darker gray border
+					)
+			)
 			.foregroundColor(.white)
 	}
 
