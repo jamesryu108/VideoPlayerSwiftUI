@@ -12,7 +12,6 @@ struct ContentView: View {
 
 	@ObservedObject private var viewModel: ContentViewViewModel
 
-	private let markdownString = "This is **bold**, this is *italic*, and this is `code`."
 	private let markdownParser = MarkdownParser()
 
 	init(viewModel: ContentViewViewModel) {
@@ -24,14 +23,15 @@ struct ContentView: View {
 		NavigationView {
 			GeometryReader { geometry in
 				LazyVStack(spacing: 0) {
-					if let videoData = viewModel.videoData {
-						VideoPlayerControlsView(videoData: videoData)
+					if let videoData = viewModel.videoData, !videoData.isEmpty {
+						VideoPlayerControlsView(videoData: viewModel.videoData ?? [], currentIndex: $viewModel.currentVideoIndex) // Assumes currentIndex binding
 							.frame(height: geometry.size.height * 0.3)
 					}
 					ScrollView {
-						AttributedTextView(attributedString: markdownParser.parse(markdownString))
+						// Directly use viewModel.currentVideoMarkdown
+						AttributedTextView(attributedString: markdownParser.parse(viewModel.currentVideoMarkdown))
 							.frame(height: geometry.size.height * 0.7)
-							.border(Color.gray, width: 1) // Optional: Add a border for visibility
+							.border(Color.gray, width: 1)
 					}
 				}
 				.navigationBarTitle("Video Player", displayMode: .inline)

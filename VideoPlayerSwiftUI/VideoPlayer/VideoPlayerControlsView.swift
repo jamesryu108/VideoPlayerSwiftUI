@@ -12,15 +12,15 @@ struct VideoPlayerControlsView: View {
 
 	var videoData: [Video]
 	@State private var player: AVPlayer?
-	@State private var currentIndex = 0 // Track the current video index
+	@Binding var currentIndex: Int // Track the current video index
 	@State private var isPlaying = false
 	@State private var showControls = false
 	@State private var playerKey: UUID = UUID() // Add this line
 
-	init(videoData: [Video]) {
+	init(videoData: [Video], currentIndex: Binding<Int>) {
 		let sortedVideos = videoData.sorted { $0.publishedAt < $1.publishedAt }
 		self.videoData = sortedVideos
-
+		self._currentIndex = currentIndex
 		// Load the first video URL into the player if available
 		if let firstVideoUrl = sortedVideos.first?.hlsURL, let url = URL(string: firstVideoUrl) {
 			_player = State(initialValue: AVPlayer(url: url))
